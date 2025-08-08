@@ -18,7 +18,26 @@ model User {
   updatedAt          DateTime @updatedAt
   preferences        Json?
   subscriptionStatus String?  @default("free")
+  passwordHash       String
+  emailVerified      Boolean  @default(false)
+  resetToken         String?
+  resetTokenExpires  DateTime?
+  role               String   @default("student")
+  verifyToken        String?
+  verifyTokenExpires DateTime?
   progress           UserProgress[]
+  refreshTokens      RefreshToken[]
+}
+
+model RefreshToken {
+  id               String   @id @default(cuid())
+  userId           String
+  token            String   @unique
+  createdAt        DateTime @default(now())
+  expiresAt        DateTime
+  revokedAt        DateTime?
+  replacedByToken  String?
+  user             User     @relation(fields: [userId], references: [id])
 }
 
 model Lesson {

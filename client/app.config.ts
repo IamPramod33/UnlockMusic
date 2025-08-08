@@ -19,6 +19,9 @@ const appConfig: ExpoConfig = {
     bundler: 'metro',
     output: 'static',
   },
+  plugins: [
+    'expo-secure-store',
+  ],
 };
 
 export default appConfig;

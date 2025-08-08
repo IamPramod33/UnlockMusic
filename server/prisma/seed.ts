@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import bcrypt from 'bcryptjs';
 
 const prisma = new PrismaClient();
 
@@ -15,6 +16,8 @@ async function main() {
       skillLevel: 'beginner',
       preferences: { theme: 'dark', language: 'en' },
       subscriptionStatus: 'free',
+      passwordHash: await bcrypt.hash('Password123!', 10),
+      emailVerified: true,
     },
   });
 
@@ -27,10 +30,29 @@ async function main() {
       skillLevel: 'intermediate',
       preferences: { theme: 'light', language: 'en' },
       subscriptionStatus: 'premium',
+      passwordHash: await bcrypt.hash('Password123!', 10),
+      emailVerified: true,
     },
   });
 
   console.log('✅ Users created:', { user1: user1.name, user2: user2.name });
+
+  // Create admin user
+  const admin = await prisma.user.upsert({
+    where: { email: 'admin@example.com' },
+    update: {},
+    create: {
+      email: 'admin@example.com',
+      name: 'Admin User',
+      skillLevel: 'advanced',
+      subscriptionStatus: 'premium',
+      passwordHash: await bcrypt.hash('Admin123!', 10),
+      emailVerified: true,
+      role: 'admin',
+    },
+  });
+
+  console.log('✅ Admin created:', admin.email);
 
   // Create Western music lessons
   const westernLesson1 = await prisma.lesson.upsert({
