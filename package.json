@@ -1,0 +1,58 @@
+{
+  "name": "unlock-music-learning",
+  "version": "1.0.0",
+  "description": "Unlock Music Learning - Cross-platform music education app",
+  "private": true,
+  "workspaces": [
+    "client",
+    "server"
+  ],
+  "scripts": {
+    "install:all": "npm install && npm run install:client && npm run install:server",
+    "install:client": "cd client && npm install",
+    "install:server": "cd server && npm install",
+    "setup:all": "npm run setup:server && npm run setup:client",
+    "setup:server": "cd server && npm run setup",
+    "setup:client": "cd client && npm run setup",
+    "dev:server": "cd server && npm run dev",
+    "dev:client": "cd client && npm run dev",
+    "dev:web": "cd client && npm run web",
+    "start:server": "cd server && npm run start:dev",
+    "start:client": "cd client && npm run start:dev",
+    "start:all": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
+    "start:web": "concurrently \"npm run dev:server\" \"npm run dev:web\"",
+    "build:server": "cd server && npm run build",
+    "build:client": "cd client && npm run build",
+    "seed": "cd server && npm run seed",
+    "db:reset": "cd server && npm run db:reset",
+    "db:studio": "cd server && npm run db:studio",
+    "test:server": "curl -s http://localhost:4000/health",
+    "test:db": "curl -s http://localhost:4000/api/test",
+    "test:all": "npm run test:server && echo '---' && npm run test:db",
+    "clean": "rm -rf node_modules client/node_modules server/node_modules client/package-lock.json server/package-lock.json",
+    "reset:all": "npm run clean && npm run install:all && npm run setup:all"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-username/unlock-music-learning.git"
+  },
+  "keywords": [
+    "music",
+    "education",
+    "react-native",
+    "expo",
+    "nodejs",
+    "prisma",
+    "western-music",
+    "carnatic-music"
+  ],
+  "author": "Unlock Music Learning Team",
+  "license": "MIT"
+}

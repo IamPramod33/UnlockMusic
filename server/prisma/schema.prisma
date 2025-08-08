@@ -1,0 +1,64 @@
+// Prisma schema for local development (SQLite)
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                 String   @id @default(cuid())
+  email              String   @unique
+  name               String?
+  skillLevel         String?
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+  preferences        Json?
+  subscriptionStatus String?  @default("free")
+  progress           UserProgress[]
+}
+
+model Lesson {
+  id           String   @id @default(cuid())
+  title        String
+  content      String
+  difficulty   String
+  musicSystem  String   // "Western" | "Carnatic"
+  category     String?
+  duration     Int?
+  prerequisites String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  exercises    Exercise[]
+  progress     UserProgress[]
+}
+
+model Exercise {
+  id          String   @id @default(cuid())
+  lessonId    String
+  type        String
+  audioFile   String?
+  notation    String?
+  difficulty  String?
+  instructions String?
+  hints       String?
+  createdAt   DateTime @default(now())
+  lesson      Lesson   @relation(fields: [lessonId], references: [id])
+}
+
+model UserProgress {
+  id               String   @id @default(cuid())
+  userId           String
+  lessonId         String
+  completionStatus String
+  score            Int?
+  timeSpent        Int?     // seconds
+  attempts         Int?     @default(0)
+  lastAttempted    DateTime @default(now())
+  user             User     @relation(fields: [userId], references: [id])
+  lesson           Lesson   @relation(fields: [lessonId], references: [id])
+}
+
