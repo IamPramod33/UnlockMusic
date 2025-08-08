@@ -1,0 +1,52 @@
+{
+  "name": "@unlockmusic/client",
+  "version": "0.1.0",
+  "main": "index.ts",
+  "scripts": {
+    "start": "expo start",
+    "android": "expo run:android",
+    "ios": "expo run:ios",
+    "web": "expo start --web --clear",
+    "dev": "expo start --clear",
+    "dev:dev": "cross-env NODE_ENV=development expo start --clear",
+    "dev:staging": "cross-env NODE_ENV=staging expo start --clear",
+    "dev:prod": "cross-env NODE_ENV=production expo start --clear",
+    "setup": "npm install && npx expo install react-dom react-native-web",
+    "start:dev": "npm run setup && npm run dev"
+  },
+  "dependencies": {
+    "@react-navigation/native": "^7.1.6",
+    "@react-navigation/native-stack": "^7.3.10",
+    "@tanstack/react-query": "^5.84.2",
+    "axios": "^1.11.0",
+    "expo": "~53.0.20",
+    "expo-constants": "~17.1.7",
+    "expo-linking": "~7.1.7",
+    "expo-router": "~5.1.4",
+    "expo-status-bar": "~2.2.3",
+    "expo-updates": "~0.28.17",
+    "react": "19.0.0",
+    "react-native": "0.79.5",
+    "react-native-gesture-handler": "~2.24.0",
+    "react-native-reanimated": "~3.17.4",
+    "react-native-safe-area-context": "5.4.0",
+    "react-native-screens": "~4.11.1",
+    "zustand": "^5.0.7",
+    "react-dom": "19.0.0",
+    "react-native-web": "^0.20.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.25.2",
+    "@react-native/eslint-config": "^0.80.2",
+    "@types/react": "~19.0.10",
+    "cross-env": "^10.0.0",
+    "dotenv-flow": "^4.1.0",
+    "eslint": "^8.57.1",
+    "typescript": "~5.6.2"
+  },
+  "private": "true",
+  "eslintConfig": {
+    "extends": "expo",
+    "root": "true"
+  }
+}

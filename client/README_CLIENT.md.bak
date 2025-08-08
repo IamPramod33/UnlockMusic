@@ -1,0 +1,24 @@
+# Unlock Music Learning — Client
+
+This is the Expo (React Native + Web) client.
+
+## Scripts
+- `npm run dev`: Start dev server (native + web)
+- `npm run web`: Start web only
+- `npm run android`: Build/run Android
+- `npm run ios`: Build/run iOS
+
+## Structure
+```
+src/
+  components/{common,web,mobile}
+  screens/{Dashboard,Lessons,Practice,Profile}
+  navigation/{web,mobile}
+  services/{audio,api,storage}
+  store/
+  utils/
+  platform/{web,mobile}
+```
+
+## Env
+Copy `.env.example` to `.env` to configure local settings.
