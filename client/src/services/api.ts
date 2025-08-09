@@ -302,6 +302,7 @@ class ApiService {
     musicSystem?: string;
     difficulty?: string;
     category?: string;
+    title?: string;
   }): Promise<ApiResponse<Lesson[]>> {
     try {
       const response = await api.get('/api/lessons', { params });
@@ -342,6 +343,32 @@ class ApiService {
 
   async adminUpdateUserRole(id: string, role: 'student' | 'teacher' | 'admin'): Promise<ApiResponse> {
     const res = await api.post(`/api/admin/users/${id}/role`, { role });
+    return res.data;
+  }
+
+  // Admin content APIs
+  async adminCreateLesson(payload: Partial<Lesson>): Promise<ApiResponse<Lesson>> {
+    const res = await api.post('/api/admin/lessons', payload);
+    return res.data;
+  }
+  async adminUpdateLesson(id: string, payload: Partial<Lesson>): Promise<ApiResponse<Lesson>> {
+    const res = await api.put(`/api/admin/lessons/${id}`, payload);
+    return res.data;
+  }
+  async adminDeleteLesson(id: string): Promise<ApiResponse> {
+    const res = await api.delete(`/api/admin/lessons/${id}`);
+    return res.data;
+  }
+  async adminCreateExercise(payload: Partial<Exercise>): Promise<ApiResponse<Exercise>> {
+    const res = await api.post('/api/admin/exercises', payload);
+    return res.data;
+  }
+  async adminUpdateExercise(id: string, payload: Partial<Exercise>): Promise<ApiResponse<Exercise>> {
+    const res = await api.put(`/api/admin/exercises/${id}`, payload);
+    return res.data;
+  }
+  async adminDeleteExercise(id: string): Promise<ApiResponse> {
+    const res = await api.delete(`/api/admin/exercises/${id}`);
     return res.data;
   }
 

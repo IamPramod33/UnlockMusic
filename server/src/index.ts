@@ -323,12 +323,13 @@ app.get('/api/test', async (_req, res) => {
 // Lessons endpoints
 app.get('/api/lessons', async (req, res) => {
   try {
-    const { musicSystem, difficulty, category } = req.query;
+    const { musicSystem, difficulty, category, title } = req.query;
     
     const where: any = {};
     if (musicSystem) where.musicSystem = musicSystem;
     if (difficulty) where.difficulty = difficulty;
     if (category) where.category = category;
+    if (title) where.title = { contains: String(title), mode: 'insensitive' };
     
     const lessons = await prisma.lesson.findMany({
       where,
@@ -460,6 +461,98 @@ app.get('/api/exercises', async (req, res) => {
       message: 'Failed to fetch exercises',
       error: error instanceof Error ? error.message : 'Unknown error'
     });
+  }
+});
+
+// Admin: lessons CRUD
+app.post('/api/admin/lessons', authMiddleware, requireRole('admin'), async (req, res) => {
+  try {
+    const { title, content, difficulty, musicSystem, category, duration, prerequisites } = req.body ?? {};
+    if (!title || !content || !difficulty || !musicSystem) {
+      return res.status(400).json({ status: 'error', message: 'title, content, difficulty, musicSystem are required' });
+    }
+    const created = await prisma.lesson.create({
+      data: { title, content, difficulty, musicSystem, category, duration, prerequisites },
+    });
+    return res.status(201).json({ status: 'success', data: created });
+  } catch (e) {
+    return res.status(500).json({ status: 'error', message: 'Failed to create lesson' });
+  }
+});
+
+app.put('/api/admin/lessons/:id', authMiddleware, requireRole('admin'), async (req, res) => {
+  try {
+    const id = req.params.id as string;
+    const { title, content, difficulty, musicSystem, category, duration, prerequisites } = req.body ?? {};
+    const updated = await prisma.lesson.update({
+      where: { id },
+      data: { title, content, difficulty, musicSystem, category, duration, prerequisites },
+    });
+    return res.json({ status: 'success', data: updated });
+  } catch (e: any) {
+    if (e?.code === 'P2025') {
+      return res.status(404).json({ status: 'error', message: 'Lesson not found' });
+    }
+    return res.status(500).json({ status: 'error', message: 'Failed to update lesson' });
+  }
+});
+
+app.delete('/api/admin/lessons/:id', authMiddleware, requireRole('admin'), async (req, res) => {
+  try {
+    const id = req.params.id as string;
+    await prisma.lesson.delete({ where: { id } });
+    return res.json({ status: 'success' });
+  } catch (e: any) {
+    if (e?.code === 'P2025') {
+      return res.status(404).json({ status: 'error', message: 'Lesson not found' });
+    }
+    return res.status(500).json({ status: 'error', message: 'Failed to delete lesson' });
+  }
+});
+
+// Admin: exercises CRUD
+app.post('/api/admin/exercises', authMiddleware, requireRole('admin'), async (req, res) => {
+  try {
+    const { lessonId, type, audioFile, notation, difficulty, instructions, hints } = req.body ?? {};
+    if (!lessonId || !type) {
+      return res.status(400).json({ status: 'error', message: 'lessonId and type are required' });
+    }
+    const created = await prisma.exercise.create({
+      data: { lessonId, type, audioFile, notation, difficulty, instructions, hints },
+    });
+    return res.status(201).json({ status: 'success', data: created });
+  } catch (e) {
+    return res.status(500).json({ status: 'error', message: 'Failed to create exercise' });
+  }
+});
+
+app.put('/api/admin/exercises/:id', authMiddleware, requireRole('admin'), async (req, res) => {
+  try {
+    const id = req.params.id as string;
+    const { lessonId, type, audioFile, notation, difficulty, instructions, hints } = req.body ?? {};
+    const updated = await prisma.exercise.update({
+      where: { id },
+      data: { lessonId, type, audioFile, notation, difficulty, instructions, hints },
+    });
+    return res.json({ status: 'success', data: updated });
+  } catch (e: any) {
+    if (e?.code === 'P2025') {
+      return res.status(404).json({ status: 'error', message: 'Exercise not found' });
+    }
+    return res.status(500).json({ status: 'error', message: 'Failed to update exercise' });
+  }
+});
+
+app.delete('/api/admin/exercises/:id', authMiddleware, requireRole('admin'), async (req, res) => {
+  try {
+    const id = req.params.id as string;
+    await prisma.exercise.delete({ where: { id } });
+    return res.json({ status: 'success' });
+  } catch (e: any) {
+    if (e?.code === 'P2025') {
+      return res.status(404).json({ status: 'error', message: 'Exercise not found' });
+    }
+    return res.status(500).json({ status: 'error', message: 'Failed to delete exercise' });
   }
 });
 

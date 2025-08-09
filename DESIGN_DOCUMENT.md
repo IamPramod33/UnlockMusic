@@ -387,12 +387,60 @@ Out of Scope (deferred)
 - Localization strings beyond toggles and placeholders
 
 #### Milestone 1.4: Content Management System (Week 7-8)
-- **Basic lesson structure and content delivery**
-- **Simple content management interface**
-- **Basic categorization (Western vs Carnatic)**
-- **Difficulty level management**
-- **Content search and filtering**
-- **Basic content editor for admins**
+Objectives
+- Provide a minimal CMS to create, edit, and delete Lessons and Exercises (admin-only)
+- Enable learners to browse, filter, and view lesson details with exercises
+
+Deliverables
+- Backend (admin-protected CRUD)
+  - POST/PUT/DELETE `/api/admin/lessons` and `/api/admin/lessons/:id`
+  - POST/PUT/DELETE `/api/admin/exercises` and `/api/admin/exercises/:id`
+  - Reuse GET `/api/lessons` with filters `musicSystem`, `difficulty`, `category` (already implemented)
+  - Reuse GET `/api/lessons/:id` with exercises (already implemented)
+  - Reuse GET `/api/exercises` with optional filters (already implemented)
+  - Simple validation: title/content/difficulty/musicSystem required for lessons; type/lessonId for exercises
+- Frontend (screens)
+  - Public: `LessonListScreen` (filters + search), `LessonDetailScreen` (shows lesson with exercises)
+  - Admin: `ContentListScreen` (tabs: Lessons, Exercises), `LessonEditorScreen`, `ExerciseEditorScreen`
+  - Navigation: add an Admin-only entry to Content screens (from Settings or Admin area)
+- Filtering & Search
+  - Client-side controls for music system, difficulty, category; search by title (client-side contains text match, server filter via `title` optional when added)
+
+Task Breakdown
+- Backend
+  - Implement admin CRUD endpoints for lessons/exercises
+  - Add basic request validation and 400/404 handling
+  - Extend GET `/api/lessons` to support `title` contains (optional)
+  - Protect endpoints with `authMiddleware` + `requireRole('admin')`
+- Frontend
+  - Build `LessonListScreen` with filter bar and search input; fetch via `/api/lessons`
+  - Build `LessonDetailScreen` to display content and exercises
+  - Build admin list (paginated or simple lists) for lessons/exercises
+  - Build simple editors with text inputs/selects for required fields; call admin CRUD
+  - Add Admin-only navigation entry (visible only if `user.role === 'admin'`)
+
+Acceptance Criteria
+- Admin can create, edit, delete a lesson with required fields and see it appear in public list
+- Admin can add exercises to a lesson and see them on the lesson detail view
+- Non-admin users can list lessons, filter by musicSystem/difficulty/category, and view details
+- Search by lesson title filters results on the client; no errors for empty queries
+- All admin endpoints require valid auth and admin role; invalid payloads return 400
+
+Runbook (Solo Dev)
+- Prereqs: Server running, admin user available (seeded `admin@example.com`)
+- Create sample lessons
+  - Admin login → use Admin Content → create a Western and a Carnatic lesson with different difficulties
+  - Add 1–2 exercises to each lesson
+- Verify public browsing
+  - As a normal user: open Lesson list → filter by music system and difficulty → open details
+- API sanity checks (optional)
+  - `GET /api/lessons?musicSystem=Western&difficulty=beginner`
+  - `GET /api/lessons/:id`
+
+Out of Scope (deferred)
+- Rich text editor, media uploads, and attachments
+- Versioning, draft/publish workflow, bulk import/export
+- Advanced validation and server-side search indexing
 
 ### Phase 2: Core Learning Features (Months 3-4)
 **Goal**: Implement essential learning functionality and audio features

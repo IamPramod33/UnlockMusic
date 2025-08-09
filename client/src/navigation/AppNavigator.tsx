@@ -15,6 +15,8 @@ import { useAuthStore } from '../store';
 import SettingsScreen from '../screens/home/SettingsScreen';
 import NotFoundScreen from '../screens/home/NotFoundScreen';
 import HomeScreen from '../screens/home/HomeScreen';
+import LessonListScreen from '../screens/Lessons/index';
+import LessonDetailScreen from '../screens/Lessons/Detail';
 
 export type RootStackParamList = {
   Login: undefined;
@@ -27,16 +29,22 @@ export type RootStackParamList = {
   AdminUsers: undefined;
   Tabs: undefined;
   NotFound: undefined;
+  LessonList: undefined;
+  LessonDetail: { id: string } | undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 const Tab = createBottomTabNavigator();
 
-function Tabs() {
+function Tabs({ colors }: { colors: { bg: string; text: string; active: string; inactive: string } }) {
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
         headerShown: false,
+        tabBarActiveTintColor: colors.active,
+        tabBarInactiveTintColor: colors.inactive,
+        tabBarStyle: { backgroundColor: colors.bg, borderTopColor: colors.inactive + '33' },
+        tabBarLabelStyle: { fontSize: 12, fontWeight: '600' },
         tabBarIcon: ({ color, size }) => {
           let icon: keyof typeof Ionicons.glyphMap = 'home';
           if (route.name === 'Home') icon = 'home';
@@ -48,7 +56,7 @@ function Tabs() {
       })}
     >
       <Tab.Screen name="Home" component={HomeScreen as any} />
-      <Tab.Screen name="Learn" component={LearnScreen as any} />
+      <Tab.Screen name="Learn" component={LessonListScreen as any} />
       <Tab.Screen name="Profile" component={ProfileScreen as any} />
       <Tab.Screen name="Settings" component={SettingsScreen as any} />
     </Tab.Navigator>
@@ -66,10 +74,24 @@ export default function AppNavigator() {
   const isAuthed = authed;
 
   const theme: Theme = prefs.theme === 'dark' ? DarkTheme : prefs.theme === 'light' ? DefaultTheme : DefaultTheme;
+  const isDark = prefs.theme === 'dark';
+  const colors = {
+    bg: isDark ? '#1E293B' : '#F8FAFC',
+    text: isDark ? '#F8FAFC' : '#1E293B',
+    active: '#2563EB',
+    inactive: isDark ? '#94A3B8' : '#64748B',
+  };
 
   return (
     <NavigationContainer theme={theme}>
-      <Stack.Navigator screenOptions={{ headerShown: true }}>
+      <Stack.Navigator
+        screenOptions={{
+          headerShown: true,
+          headerStyle: { backgroundColor: colors.bg },
+          headerTintColor: colors.text,
+          headerTitleStyle: { color: colors.text },
+        }}
+      >
         {!isAuthed ? (
           <>
             <Stack.Screen name="Login" component={LoginScreen} />
@@ -79,7 +101,11 @@ export default function AppNavigator() {
           </>
         ) : (
           <>
-            <Stack.Screen name="Tabs" component={Tabs} options={{ headerShown: false }} />
+            <Stack.Screen name="Tabs" options={{ headerShown: false }}>
+              {() => <Tabs colors={colors} />}
+            </Stack.Screen>
+            <Stack.Screen name="LessonList" component={LessonListScreen as any} options={{ title: 'Lessons' }} />
+            <Stack.Screen name="LessonDetail" component={LessonDetailScreen as any} options={{ title: 'Lesson' }} />
             <Stack.Screen name="ChangePassword" component={ChangePasswordScreen} options={{ title: 'Change Password' }} />
             <Stack.Screen name="AdminUsers" component={AdminUsersScreen} options={{ title: 'Users (Admin)' }} />
           </>
