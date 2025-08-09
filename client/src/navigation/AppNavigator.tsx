@@ -3,19 +3,18 @@ import { NavigationContainer, DefaultTheme, DarkTheme, Theme } from '@react-navi
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
-
 import LoginScreen from '../screens/auth/LoginScreen';
 import RegisterScreen from '../screens/auth/RegisterScreen';
 import ForgotPasswordScreen from '../screens/auth/ForgotPasswordScreen';
 import ResetPasswordScreen from '../screens/auth/ResetPasswordScreen';
-import HomeScreen from '../screens/home/HomeScreen';
 import ProfileScreen from '../screens/home/ProfileScreen';
 import ChangePasswordScreen from '../screens/home/ChangePasswordScreen';
 import AdminUsersScreen from '../screens/home/AdminUsersScreen';
 import LearnScreen from '../screens/home/LearnScreen';
+import { useAuthStore } from '../store';
 import SettingsScreen from '../screens/home/SettingsScreen';
 import NotFoundScreen from '../screens/home/NotFoundScreen';
-import { useAuthStore } from '../store';
+import HomeScreen from '../screens/home/HomeScreen';
 
 export type RootStackParamList = {
   Login: undefined;
@@ -27,6 +26,7 @@ export type RootStackParamList = {
   ChangePassword: undefined;
   AdminUsers: undefined;
   Tabs: undefined;
+  NotFound: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -47,10 +47,10 @@ function Tabs() {
         },
       })}
     >
-      <Tab.Screen name="Home" component={HomeScreen} />
-      <Tab.Screen name="Learn" component={LearnScreen} />
-      <Tab.Screen name="Profile" component={ProfileScreen} />
-      <Tab.Screen name="Settings" component={SettingsScreen} />
+      <Tab.Screen name="Home" component={HomeScreen as any} />
+      <Tab.Screen name="Learn" component={LearnScreen as any} />
+      <Tab.Screen name="Profile" component={ProfileScreen as any} />
+      <Tab.Screen name="Settings" component={SettingsScreen as any} />
     </Tab.Navigator>
   );
 }

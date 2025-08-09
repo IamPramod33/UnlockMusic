@@ -203,7 +203,7 @@ app.get('/api/admin/users', authMiddleware, requireRole('admin'), async (_req, r
 // Admin: update user role
 app.post('/api/admin/users/:id/role', authMiddleware, requireRole('admin'), async (req, res) => {
   try {
-    const { id } = req.params;
+    const id = req.params.id as string;
     const { role } = req.body ?? {};
     if (!['student', 'teacher', 'admin'].includes(role)) {
       return res.status(400).json({ status: 'error', message: 'Invalid role' });
