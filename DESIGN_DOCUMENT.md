@@ -317,12 +317,74 @@ CommunityPosts (id, user_id, title, content, type, music_system, likes, comments
 - **Basic role management (student, teacher, admin)**
 
 #### Milestone 1.3: Basic UI/UX Foundation (Week 5-6)
-- **Responsive navigation system**
-- **Basic dashboard layout**
-- **User profile interface**
-- **Settings and preferences UI**
-- **Cross-platform responsive design**
-- **Basic accessibility features (screen reader support)**
+Objectives
+- Establish a clean, responsive shell for the app with authenticated tabs and core screens
+- Implement a theming system (Light/Dark) using the palette in 4.3 and ensure baseline accessibility
+
+Deliverables
+- Navigation
+  - Public stack: `Login`, `Register`, `ForgotPassword`, `ResetPassword`
+  - Private stack: Bottom tabs `Home`, `Learn` (placeholder), `Profile`
+  - Fallback `NotFound` screen and guarded routes tied to auth state
+- Screens (V1)
+  - `HomeScreen`: Simple welcome, role-aware admin action visible only to admins
+  - `ProfileScreen`: View/edit name and skill level; show email and role; show preferences snapshot
+  - `SettingsScreen`: Toggle theme (light/dark), select language, audio quality; persists in store
+  - `LearnScreen` (placeholder): stub for future lessons
+  - `NotFoundScreen`: generic 404 within app container
+- UI Components
+  - `ScreenContainer`, `Header`, `Button`, `Input`, `Loader`, `Alert`, `EmptyState`
+  - Theme tokens (spacing, colors, radius, typography) and `useTheme` hook
+- Theming & Responsiveness
+  - Light/Dark theme mapped from section 4.3 palette
+  - Breakpoints: xs (<360), sm (360-599), md (600-959), lg (>=960)
+  - Web: centered max-width container (e.g., 1200px), mobile-first layout
+- Accessibility (baseline)
+  - Minimum touch target 44x44
+  - Sufficient color contrast per WCAG AA
+  - Semantic roles/ARIA for web inputs/buttons; visible focus outlines on web
+
+Task Breakdown
+- Frontend
+  - Add bottom tab navigator and route guards using the global auth store
+  - Build `HomeScreen`, `ProfileScreen`, `SettingsScreen`, `LearnScreen`, `NotFoundScreen`
+  - Implement theme context/provider with Light/Dark; connect to preferences in store
+  - Extract shared UI primitives and spacing/typography scale
+  - Implement responsive containers and platform-specific tweaks for web/mobile
+- Backend
+  - Reuse existing `/api/auth/me` and profile update endpoints; no new APIs required
+  - Optional: add `/api/health` for uptime checks
+- Design
+  - Quick wireframes for 5 screens and tab layout
+  - Define icon set (react-native-vector-icons) and placeholder illustrations
+
+Acceptance Criteria
+- Guarded navigation reliably switches Public ↔ Private based on auth state
+- Bottom tabs render on mobile and web, with icons and labels
+- Layout adapts without horizontal scroll at common breakpoints; web uses centered max width
+- Theme toggle updates UI instantly and persists in store; applied across all screens
+- Profile allows editing name and skill level and reflects saved state
+- Settings updates preferences (theme, language, audio quality) in store; changes survive reload
+- Basic accessibility: focus outlines on web, labels on inputs, color contrast meets AA
+
+Runbook (Solo Dev)
+- Prereqs: Backend running on port 4000; client configured with `API_URL`
+- Start
+  - Server: `npm run dev:server` (root) or `cd server && npm run dev`
+  - Client: `npm run dev:client` (root) or `cd client && npm run start`
+- Test
+  - Web: open http://localhost:8081 (Expo Web) and validate nav, theme toggle, responsive layout
+  - Mobile: Expo Go → scan QR, verify tabs, theme, and profile edits
+- Manual QA checklist
+  - Login → tabs appear; logout → auth screens appear
+  - Switch theme; reload app; theme persists
+  - Change name/skill; revisit Profile; values persist
+  - Resize browser from 320px to 1440px; no layout breaks
+
+Out of Scope (deferred)
+- Final visual design polish, animations, and advanced accessibility audits
+- Lessons content, audio playback, and learning flows
+- Localization strings beyond toggles and placeholders
 
 #### Milestone 1.4: Content Management System (Week 7-8)
 - **Basic lesson structure and content delivery**
