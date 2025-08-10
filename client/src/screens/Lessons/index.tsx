@@ -44,12 +44,15 @@ export default function LessonListScreen({ navigation }: any) {
       <FlatList
         data={items}
         keyExtractor={(i) => i.id}
-        renderItem={({ item }) => (
-          <TouchableOpacity style={[styles.card, { backgroundColor: colors.card, borderColor: colors.border }]} onPress={() => navigation.navigate('LessonDetail', { id: item.id })}>
-            <Text style={[styles.cardTitle, { color: colors.text }]}>{item.title}</Text>
-            <Text style={[styles.cardMeta, { color: colors.muted }]}>{item.musicSystem} • {item.difficulty}</Text>
-          </TouchableOpacity>
-        )}
+        renderItem={({ item }) => {
+          const displayTitle = item.title.replace(/major\s+scales/gi, 'Scales');
+          return (
+            <TouchableOpacity style={[styles.card, { backgroundColor: colors.card, borderColor: colors.border }]} onPress={() => navigation.navigate('LessonDetail', { id: item.id })}>
+              <Text style={[styles.cardTitle, { color: colors.text }]}>{displayTitle}</Text>
+              <Text style={[styles.cardMeta, { color: colors.muted }]}>{item.musicSystem} • {item.difficulty}</Text>
+            </TouchableOpacity>
+          );
+        }}
         ListEmptyComponent={<Text style={{ color: colors.muted, textAlign: 'center' }}>No lessons</Text>}
       />
     </View>

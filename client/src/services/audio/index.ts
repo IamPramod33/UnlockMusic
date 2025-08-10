@@ -120,6 +120,10 @@ export class AudioPlayer {
     this.statusListeners.forEach((l) => l(this.lastStatus));
   }
 
+  clearError(): void {
+    this.emit({ error: undefined });
+  }
+
   private startPolling(): void {
     if (this.statusTimer) return;
     this.statusTimer = setInterval(async () => {
@@ -157,6 +161,7 @@ export class AudioPlayer {
     const sourceUrl = url;
 
     this.stop();
+    this.clearError();
     this.emit({ isBuffering: true });
 
     if (Platform.OS === 'web') {
@@ -254,7 +259,7 @@ export class AudioPlayer {
       }
     }
     this.stopPolling();
-    this.emit({ isPlaying: false, positionSec: 0, isBuffering: false });
+    this.emit({ isPlaying: false, positionSec: 0, isBuffering: false, error: undefined });
   }
 
   async seek(seconds: number): Promise<void> {

@@ -76,7 +76,7 @@ async function main() {
     create: {
       id: 'western-major-scales',
       title: 'Major Scales',
-      content: 'Master the C major scale and understand the pattern of whole and half steps that creates the major scale sound.',
+      content: '',
       difficulty: 'beginner',
       musicSystem: 'Western',
       category: 'Scales',
