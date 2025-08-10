@@ -8,6 +8,7 @@ import { resolveMediaUrl, API_URL } from '../../../services/api';
 import { Ionicons } from '@expo/vector-icons';
 import { playScaleSequence, stopScalePlayback } from '../../../services/music/scalePlayer';
 import PianoView from '../../../components/western/PianoView';
+import { audioPlayer } from '../../../services/audio';
 
 type Props = { lesson: Lesson };
 
@@ -30,6 +31,10 @@ export default function WesternLessonDetail({ lesson }: Props) {
   const [streak, setStreak] = useState<number>(0);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const [showPracticePanel, setShowPracticePanel] = useState(true);
+  const [showPianoVisualization, setShowPianoVisualization] = useState(true);
+  const [activePianoNotes, setActivePianoNotes] = useState<string[]>([]);
+
+  function toSharpHash(n: string): string { return n.replace('sharp', '#'); }
 
   // Streak helpers (simple localStorage-based)
   function readStreak(): number {
@@ -106,6 +111,7 @@ export default function WesternLessonDetail({ lesson }: Props) {
       <FlatList
         data={showExercises ? lesson.exercises : []}
         keyExtractor={(i) => i.id}
+        contentContainerStyle={{ paddingBottom: 32 }}
         ListHeaderComponent={
           <View>
             {/* Practice panel (collapsible) */}
@@ -155,8 +161,6 @@ export default function WesternLessonDetail({ lesson }: Props) {
               {showScalePlayer && (
                 <View style={{ paddingTop: 8 }}>
                   <View style={{ height: 8 }} />
-                  {/* Piano visualization */}
-                  <PianoView highlightNotes={[]} activeNotes={[]} notation={notation} tonic={selectedKey as any} patternKey={selectedPattern} />
                   {/* Pattern & Key in two columns */}
                   <View style={{ flexDirection: 'row', gap: 10, marginTop: 10 }}>
                     <View style={{ flex: 1 }}>
@@ -218,16 +222,50 @@ export default function WesternLessonDetail({ lesson }: Props) {
                         tonic: selectedKey as any,
                         direction,
                         bpm: 80,
+                        onNoteStart: (n) => setActivePianoNotes([toSharpHash(n)]),
+                        onNoteEnd: () => setActivePianoNotes([]),
                       });
                       setPlaysCount((c) => c + 1);
                       bumpStreak();
                     }}>
                       <Ionicons name="play" color="#fff" size={18} />
                     </Pressable>
-                    <Pressable accessibilityLabel="Stop scale" style={{ padding: 10, borderRadius: 999, backgroundColor: colors.border }} onPress={() => { stopScalePlayback(); }}>
+                    <Pressable accessibilityLabel="Stop scale" style={{ padding: 10, borderRadius: 999, backgroundColor: colors.border }} onPress={() => { stopScalePlayback(); setActivePianoNotes([]); }}>
                       <Ionicons name="stop" color={colors.text} size={18} />
                     </Pressable>
                   </View>
+                </View>
+              )}
+            </View>
+            {/* Piano Visualization (collapsible) */}
+            <View style={[styles.group, { borderColor: colors.border, marginTop: 12 }]}>
+              <Pressable onPress={() => setShowPianoVisualization((v) => !v)} style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                <Text style={{ color: colors.text, fontWeight: '700' }}>Piano Visualization</Text>
+                <Ionicons name={showPianoVisualization ? 'chevron-up' : 'chevron-down'} color={colors.muted} size={18} />
+              </Pressable>
+              {showPianoVisualization && (
+                <View style={{ paddingTop: 8 }}>
+                  <PianoView
+                    highlightNotes={[]}
+                    activeNotes={activePianoNotes}
+                    notation={notation}
+                    tonic={selectedKey as any}
+                    patternKey={selectedPattern}
+                    enableTouch
+                    onKeyDown={async (note) => {
+                      try {
+                        stopScalePlayback();
+                        audioPlayer.stop();
+                        const fileBase = note.replace('#', 'sharp');
+                        await audioPlayer.play(`${API_URL}/instruments/piano/${fileBase}.mp3`);
+                        setActivePianoNotes([note]);
+                      } catch {}
+                    }}
+                    onKeyUp={() => {
+                      audioPlayer.stop();
+                      setActivePianoNotes([]);
+                    }}
+                  />
                 </View>
               )}
             </View>

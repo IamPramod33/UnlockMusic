@@ -22,6 +22,17 @@ const appConfig: ExpoConfig = {
   plugins: [
     'expo-secure-store',
   ],
+  ios: {
+    infoPlist: {
+      NSAppTransportSecurity: {
+        NSAllowsArbitraryLoads: true,
+        NSExceptionDomains: {
+          localhost: { NSExceptionAllowsInsecureHTTPLoads: true, NSIncludesSubdomains: true },
+          '127.0.0.1': { NSExceptionAllowsInsecureHTTPLoads: true, NSIncludesSubdomains: true },
+        },
+      },
+    },
+  },
 };
 
 export default appConfig;
