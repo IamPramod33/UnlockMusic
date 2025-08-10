@@ -3,7 +3,14 @@ import Constants from 'expo-constants';
 import * as SecureStore from 'expo-secure-store';
 
 // Get API URL from environment configuration
-const API_URL = Constants.expoConfig?.extra?.apiUrl || 'http://localhost:4000';
+export const API_URL = Constants.expoConfig?.extra?.apiUrl || 'http://localhost:4000';
+
+export function resolveMediaUrl(pathOrUrl?: string): string | undefined {
+  if (!pathOrUrl) return undefined;
+  if (/^https?:\/\//i.test(pathOrUrl)) return pathOrUrl;
+  if (pathOrUrl.startsWith('/')) return `${API_URL}${pathOrUrl}`;
+  return `${API_URL}/${pathOrUrl}`;
+}
 
 // Keys for token storage
 const KEY_ACCESS = 'auth_token';

@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, FlatList } from 'react-native';
 import Markdown from 'react-native-markdown-display';
 import { useThemeColors } from '../../theme';
 import { AudioPlayerUI } from '../../components/common';
-import apiService, { Lesson } from '../../services/api';
+import apiService, { Lesson, resolveMediaUrl } from '../../services/api';
 
 export default function LessonDetailScreen({ route }: any) {
   const colors = useThemeColors();
@@ -34,7 +34,11 @@ export default function LessonDetailScreen({ route }: any) {
           <View style={[styles.card, { backgroundColor: colors.card, borderColor: colors.border }]}>
             <Text style={[styles.cardTitle, { color: colors.text }]}>{item.type}</Text>
             <Text style={[styles.cardMeta, { color: colors.muted }]}>{item.difficulty || '—'}</Text>
-            {item.audioFile ? <View style={{ marginTop: 8 }}><AudioPlayerUI url={item.audioFile} title="Exercise Audio" /></View> : null}
+            {item.audioFile ? (
+              <View style={{ marginTop: 8 }}>
+                <AudioPlayerUI url={resolveMediaUrl(item.audioFile) as string} title="Exercise Audio" />
+              </View>
+            ) : null}
           </View>
         )}
         ListEmptyComponent={<Text style={{ color: colors.muted, textAlign: 'center' }}>No exercises</Text>}
