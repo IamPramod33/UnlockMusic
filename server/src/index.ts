@@ -1,4 +1,5 @@
 import express from 'express';
+import path from 'path';
 import cors from 'cors';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
@@ -16,6 +17,15 @@ app.use(morgan('dev'));
 app.use(helmet());
 const limiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 200 });
 app.use(limiter);
+
+// Static media: serve local audio files (e.g., /audio/carnatic/mayamalavagowla.mp3)
+const publicDir = path.join(__dirname, '..', 'public');
+const audioDir = path.join(publicDir, 'audio');
+const tanpuraDir = path.join(publicDir, 'tanpura');
+const instrumentsDir = path.join(publicDir, 'instruments');
+app.use('/audio', express.static(audioDir, { maxAge: '7d', immutable: true }));
+app.use('/tanpura', express.static(tanpuraDir, { maxAge: '7d', immutable: true }));
+app.use('/instruments', express.static(instrumentsDir, { maxAge: '7d', immutable: true }));
 
 // Simple JWT helpers
 const JWT_SECRET = process.env.JWT_SECRET || 'dev_secret_change_me';
