@@ -102,13 +102,13 @@ async function main() {
   });
 
   const carnaticLesson2 = await prisma.lesson.upsert({
-    where: { id: 'carnatic-mayamalavagowla' },
+    where: { id: 'carnatic-ragas' },
     update: {},
     create: {
-      id: 'carnatic-mayamalavagowla',
-      title: 'Mayamalavagowla Raga',
-      content: 'Explore the Mayamalavagowla raga, one of the fundamental ragas in Carnatic music. Learn its arohanam and avarohanam.',
-      difficulty: 'intermediate',
+      id: 'carnatic-ragas',
+      title: 'Carnatic Ragas',
+      content: 'Explore Carnatic ragas with interactive playback: select ragas (Melakarta and Janya), choose tonic, play arohana/avarohana with piano visualization and optional tanpura support.',
+      difficulty: 'beginner',
       musicSystem: 'Carnatic',
       category: 'Ragas',
       duration: 25,
@@ -179,9 +179,9 @@ async function main() {
         type: 'raga_practice',
         audioFile: '/audio/carnatic/mayamalavagowla.mp3',
         notation: 'Sa Re Ga Ma Pa Dha Ni Sa Ni Dha Pa Ma Ga Re Sa',
-        difficulty: 'intermediate',
-        instructions: 'Practice the Mayamalavagowla raga arohanam and avarohanam',
-        hints: 'Pay attention to the gamakas (ornamentations) characteristic of this raga',
+        difficulty: 'beginner',
+        instructions: 'From the Carnatic Ragas lesson, select Mayamalavagowla and practice its arohana and avarohana with the piano visualization.',
+        hints: 'Use tanpura for sruti stability; focus on clean transitions between swaras.',
       },
     }),
   ]);
