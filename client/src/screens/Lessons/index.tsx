@@ -54,6 +54,15 @@ export default function LessonListScreen({ navigation }: any) {
           );
         }}
         ListEmptyComponent={<Text style={{ color: colors.muted, textAlign: 'center' }}>No lessons</Text>}
+        ListHeaderComponent={
+          <TouchableOpacity
+            onPress={() => navigation.navigate('CarnaticRagas')}
+            style={[styles.card, { backgroundColor: colors.card, borderColor: colors.border }]}
+          >
+            <Text style={[styles.cardTitle, { color: colors.text }]}>Carnatic Ragas</Text>
+            <Text style={[styles.cardMeta, { color: colors.muted }]}>Explore ragas with tanpura and piano visualization</Text>
+          </TouchableOpacity>
+        }
       />
     </View>
   );

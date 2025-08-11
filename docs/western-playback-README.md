@@ -31,6 +31,8 @@ Represent scales as semitone patterns relative to tonic (0 = tonic):
 
 Given a tonic MIDI (e.g., C4 = 60), scale notes = tonic + pattern, optionally extended to multiple octaves.
 
+See also: [Western Lesson Detail Component (UI + Behavior)](./western-lesson-detail.md)
+
 ## Piano Visualization
 - Web
   - Canvas or SVG for keyboard rendering; maintain aspect ratio responsive layout.

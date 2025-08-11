@@ -17,6 +17,7 @@ import NotFoundScreen from '../screens/home/NotFoundScreen';
 import HomeScreen from '../screens/home/HomeScreen';
 import LessonListScreen from '../screens/Lessons/index';
 import LessonDetailScreen from '../screens/Lessons/Detail';
+import CarnaticRagasScreen from '../screens/Lessons/carnatic/CarnaticRagasScreen';
 
 export type RootStackParamList = {
   Login: undefined;
@@ -31,6 +32,7 @@ export type RootStackParamList = {
   NotFound: undefined;
   LessonList: undefined;
   LessonDetail: { id: string } | undefined;
+  CarnaticRagas: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -106,6 +108,7 @@ export default function AppNavigator() {
             </Stack.Screen>
             <Stack.Screen name="LessonList" component={LessonListScreen as any} options={{ title: 'Lessons' }} />
             <Stack.Screen name="LessonDetail" component={LessonDetailScreen as any} options={{ title: 'Lesson' }} />
+            <Stack.Screen name="CarnaticRagas" component={CarnaticRagasScreen as any} options={{ title: 'Carnatic Ragas' }} />
             <Stack.Screen name="ChangePassword" component={ChangePasswordScreen} options={{ title: 'Change Password' }} />
             <Stack.Screen name="AdminUsers" component={AdminUsersScreen} options={{ title: 'Users (Admin)' }} />
           </>

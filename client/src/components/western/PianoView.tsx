@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { useWindowDimensions, View } from 'react-native';
+import { Platform, useWindowDimensions, View } from 'react-native';
 import Svg, { Rect } from 'react-native-svg';
 import { SCALE_PATTERNS, type ScaleKey } from '../../services/music/scalePatterns';
 
@@ -107,6 +107,22 @@ export default function PianoView({ highlightNotes = [], activeNotes = [], notat
     onKeyUp && onKeyUp(note);
   }
 
+  function eventsFor(note: string) {
+    if (!enableTouch) return {} as any;
+    if (Platform.OS === 'web') {
+      return {
+        onClick: () => {
+          handlePressIn(note);
+          setTimeout(() => handlePressOut(note), 120);
+        },
+      } as any;
+    }
+    return {
+      onPressIn: () => handlePressIn(note),
+      onPressOut: () => handlePressOut(note),
+    } as any;
+  }
+
   return (
     <View>
       <Svg width={maxWidth} height={whiteKeyH} viewBox={`0 0 ${width} ${120}`}>
@@ -121,8 +137,7 @@ export default function PianoView({ highlightNotes = [], activeNotes = [], notat
             fill={colorFor(k.note, false)}
             stroke="#0f172a"
             strokeWidth={1}
-            onPressIn={() => handlePressIn(k.note)}
-            onPressOut={() => handlePressOut(k.note)}
+            {...eventsFor(k.note)}
           />
         ))}
         {/* Black keys on top */}
@@ -135,8 +150,7 @@ export default function PianoView({ highlightNotes = [], activeNotes = [], notat
             height={k.h}
             fill={colorFor(k.note, true)}
             rx={2}
-            onPressIn={() => handlePressIn(k.note)}
-            onPressOut={() => handlePressOut(k.note)}
+            {...eventsFor(k.note)}
           />
         ))}
       </Svg>

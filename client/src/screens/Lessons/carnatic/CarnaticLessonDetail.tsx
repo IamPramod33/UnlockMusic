@@ -1,21 +1,18 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, FlatList, Pressable } from 'react-native';
+import React, { useEffect, useMemo, useState } from 'react';
+import { View, Text, StyleSheet, FlatList, Pressable, ScrollView } from 'react-native';
 import Markdown from 'react-native-markdown-display';
 import { Ionicons } from '@expo/vector-icons';
 import { useThemeColors } from '../../../theme';
 import { AudioPlayerUI } from '../../../components/common';
 import type { Lesson } from '../../../services/api';
 import { resolveMediaUrl } from '../../../services/api';
+import CarnaticRaga from '../../../components/carnatic/CarnaticRaga';
 
 type Props = { lesson: Lesson };
 
 export default function CarnaticLessonDetail({ lesson }: Props) {
   const colors = useThemeColors();
-  const [scale, setScale] = useState<string>('C');
-  const [instrument, setInstrument] = useState<'violin' | 'harmonium' | 'flute'>('violin');
-  const [tanpuraOn, setTanpuraOn] = useState(false);
-  const [showPlayback, setShowPlayback] = useState(false);
-  const [showTanpura, setShowTanpura] = useState(false);
+  // Reverted: no local raga/tanpura state; handled by CarnaticRaga component
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
@@ -40,61 +37,7 @@ export default function CarnaticLessonDetail({ lesson }: Props) {
           </View>
         )}
         ListEmptyComponent={<Text style={{ color: colors.muted, textAlign: 'center' }}>No exercises</Text>}
-        ListFooterComponent={
-          <View>
-            {/* Compact Raga Playback */}
-            <View style={[styles.playbackRow, { borderColor: colors.border }]}>
-              <Pressable onPress={() => setShowPlayback((v) => !v)} style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                <Text style={{ color: colors.text, fontWeight: '700' }}>Raga Playback</Text>
-                <Ionicons name={showPlayback ? 'chevron-up' : 'chevron-down'} color={colors.muted} size={18} />
-              </Pressable>
-              {showPlayback && (
-                <View>
-                  <View style={{ height: 8 }} />
-                  <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
-                    {['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'].map((s) => (
-                      <Pressable key={s} onPress={() => setScale(s)} style={{ paddingVertical: 6, paddingHorizontal: 10, borderRadius: 8, borderWidth: 1, borderColor: colors.border, backgroundColor: scale === s ? colors.primary : colors.card }}>
-                        <Text style={{ color: scale === s ? '#fff' : colors.text }}>{s}</Text>
-                      </Pressable>
-                    ))}
-                  </View>
-                  <View style={{ height: 8 }} />
-                  <View style={{ flexDirection: 'row', gap: 8 }}>
-                    {(['violin','harmonium','flute'] as const).map((ins) => (
-                      <Pressable key={ins} onPress={() => setInstrument(ins)} style={{ paddingVertical: 6, paddingHorizontal: 10, borderRadius: 8, borderWidth: 1, borderColor: colors.border, backgroundColor: instrument === ins ? colors.primary : colors.card }}>
-                        <Text style={{ color: instrument === ins ? '#fff' : colors.text, textTransform: 'capitalize' }}>{ins}</Text>
-                      </Pressable>
-                    ))}
-                  </View>
-                  <View style={{ height: 8 }} />
-                  <View style={{ flexDirection: 'row', gap: 12 }}>
-                    <Pressable accessibilityLabel="Play raga" style={{ padding: 10, borderRadius: 999, backgroundColor: colors.primary }} onPress={() => { /* TODO */ }}>
-                      <Ionicons name="play" color="#fff" size={18} />
-                    </Pressable>
-                    <Pressable accessibilityLabel="Stop raga" style={{ padding: 10, borderRadius: 999, backgroundColor: colors.border }} onPress={() => { /* TODO */ }}>
-                      <Ionicons name="stop" color={colors.text} size={18} />
-                    </Pressable>
-                  </View>
-                </View>
-              )}
-            </View>
-            {/* Compact Tanpura */}
-            <View style={[styles.playbackRow, { borderColor: colors.border }]}>
-              <Pressable onPress={() => setShowTanpura((v) => !v)} style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                <Text style={{ color: colors.text, fontWeight: '700' }}>Tanpura</Text>
-                <Ionicons name={showTanpura ? 'chevron-up' : 'chevron-down'} color={colors.muted} size={18} />
-              </Pressable>
-              {showTanpura && (
-                <View style={{ marginTop: 8, flexDirection: 'row', gap: 12, alignItems: 'center' }}>
-                  <Pressable accessibilityLabel={tanpuraOn ? 'Stop tanpura' : 'Play tanpura'} style={{ padding: 10, borderRadius: 999, backgroundColor: tanpuraOn ? colors.border : colors.success }} onPress={() => setTanpuraOn((v) => !v)}>
-                    <Ionicons name={tanpuraOn ? 'stop' : 'play'} color={tanpuraOn ? colors.text : '#0b1220'} size={18} />
-                  </Pressable>
-                  <Text style={{ color: colors.muted, fontSize: 12 }}>Tip: Use tanpura to anchor your ear to {scale}.</Text>
-                </View>
-              )}
-            </View>
-          </View>
-        }
+        ListFooterComponent={<CarnaticRaga />}
       />
     </View>
   );
