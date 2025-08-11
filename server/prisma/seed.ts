@@ -54,14 +54,32 @@ async function main() {
 
   console.log('✅ Admin created:', admin.email);
 
+  // Prune lessons not in the current curriculum
+  const allowedLessonIds = [
+    'carnatic-theory-intro',
+    'western-theory-intro',
+    'western-scales',
+    'carnatic-ragas',
+  ];
+  // Remove dependent records first to satisfy FKs
+  await prisma.userProgress.deleteMany({
+    where: { lessonId: { notIn: allowedLessonIds } },
+  });
+  await prisma.exercise.deleteMany({
+    where: { lessonId: { notIn: allowedLessonIds } },
+  });
+  await prisma.lesson.deleteMany({
+    where: { id: { notIn: allowedLessonIds } },
+  });
+
   // Create Western music lessons
-  const westernLesson1 = await prisma.lesson.upsert({
-    where: { id: 'western-basic-notes' },
+  const westernTheory = await prisma.lesson.upsert({
+    where: { id: 'western-theory-intro' },
     update: {},
     create: {
-      id: 'western-basic-notes',
-      title: 'Introduction to Musical Notes',
-      content: 'Learn the fundamental notes in Western music: C, D, E, F, G, A, B. This lesson covers note names, their positions on the staff, and basic reading skills.',
+      id: 'western-theory-intro',
+      title: 'Introduction to Western Music Theory',
+      content: 'Learn staff notation, note names (C, D, E, F, G, A, B), accidentals, and the concept of key signatures. This lesson builds a foundation for scales and chords.',
       difficulty: 'beginner',
       musicSystem: 'Western',
       category: 'Theory',
@@ -70,29 +88,29 @@ async function main() {
     },
   });
 
-  const westernLesson2 = await prisma.lesson.upsert({
-    where: { id: 'western-major-scales' },
+  const westernScales = await prisma.lesson.upsert({
+    where: { id: 'western-scales' },
     update: {},
     create: {
-      id: 'western-major-scales',
-      title: 'Major Scales',
-      content: '',
+      id: 'western-scales',
+      title: 'Western Music Scales',
+      content: 'Practice major and minor scales with interactive playback and piano visualization. Select scale pattern, key, and direction.',
       difficulty: 'beginner',
       musicSystem: 'Western',
       category: 'Scales',
       duration: 20,
-      prerequisites: 'western-basic-notes',
+      prerequisites: 'western-theory-intro',
     },
   });
 
   // Create Carnatic music lessons
-  const carnaticLesson1 = await prisma.lesson.upsert({
-    where: { id: 'carnatic-swaras' },
+  const carnaticTheory = await prisma.lesson.upsert({
+    where: { id: 'carnatic-theory-intro' },
     update: {},
     create: {
-      id: 'carnatic-swaras',
-      title: 'Introduction to Swaras',
-      content: 'Learn the seven basic swaras in Carnatic music: Sa, Re, Ga, Ma, Pa, Dha, Ni. Understand their relationship and basic pronunciation.',
+      id: 'carnatic-theory-intro',
+      title: 'Introduction to Carnatic Music Theory',
+      content: 'Learn the seven basic swaras (Sa, Re, Ga, Ma, Pa, Dha, Ni), the concept of sruti, and an overview of the Melakarta framework.',
       difficulty: 'beginner',
       musicSystem: 'Carnatic',
       category: 'Theory',
@@ -101,7 +119,7 @@ async function main() {
     },
   });
 
-  const carnaticLesson2 = await prisma.lesson.upsert({
+  const carnaticRagas = await prisma.lesson.upsert({
     where: { id: 'carnatic-ragas' },
     update: {},
     create: {
@@ -112,30 +130,31 @@ async function main() {
       musicSystem: 'Carnatic',
       category: 'Ragas',
       duration: 25,
-      prerequisites: 'carnatic-swaras',
+      prerequisites: 'carnatic-theory-intro',
     },
   });
 
   console.log('✅ Lessons created:', {
-    western: [westernLesson1.title, westernLesson2.title],
-    carnatic: [carnaticLesson1.title, carnaticLesson2.title],
+    western: [westernTheory.title, westernScales.title],
+    carnatic: [carnaticTheory.title, carnaticRagas.title],
   });
 
   // Create exercises for lessons
   const exercises = await Promise.all([
     // Western exercises
+    // Keep a simple exercise for Western theory intro (optional listening)
     prisma.exercise.upsert({
       where: { id: 'western-exercise-1' },
       update: {},
       create: {
         id: 'western-exercise-1',
-        lessonId: westernLesson1.id,
+        lessonId: westernTheory.id,
         type: 'note_reading',
         audioFile: '/audio/western/notes-c-major.mp3',
         notation: 'C D E F G A B C',
         difficulty: 'beginner',
-        instructions: 'Play the C major scale ascending and descending',
-        hints: 'Start with middle C and follow the pattern: whole, whole, half, whole, whole, whole, half',
+        instructions: 'Listen to the note names and locate them on the keyboard visualization in the next lesson.',
+        hints: 'Start with middle C (C4).',
       },
     }),
 
@@ -144,7 +163,7 @@ async function main() {
       update: {},
       create: {
         id: 'western-exercise-2',
-        lessonId: westernLesson2.id,
+        lessonId: westernScales.id,
         type: 'scale_practice',
         audioFile: '/audio/western/c-major-scale.mp3',
         notation: 'C D E F G A B C B A G F E D C',
@@ -160,7 +179,7 @@ async function main() {
       update: {},
       create: {
         id: 'carnatic-exercise-1',
-        lessonId: carnaticLesson1.id,
+        lessonId: carnaticTheory.id,
         type: 'swara_practice',
         audioFile: '/audio/carnatic/swaras-basic.mp3',
         notation: 'Sa Re Ga Ma Pa Dha Ni Sa',
@@ -175,7 +194,7 @@ async function main() {
       update: {},
       create: {
         id: 'carnatic-exercise-2',
-        lessonId: carnaticLesson2.id,
+        lessonId: carnaticRagas.id,
         type: 'raga_practice',
         audioFile: '/audio/carnatic/mayamalavagowla.mp3',
         notation: 'Sa Re Ga Ma Pa Dha Ni Sa Ni Dha Pa Ma Ga Re Sa',
@@ -196,7 +215,7 @@ async function main() {
       create: {
         id: 'progress-1',
         userId: user1.id,
-        lessonId: westernLesson1.id,
+        lessonId: westernTheory.id,
         completionStatus: 'in_progress',
         score: 75,
         timeSpent: 600, // 10 minutes
@@ -210,7 +229,7 @@ async function main() {
       create: {
         id: 'progress-2',
         userId: user2.id,
-        lessonId: carnaticLesson1.id,
+        lessonId: carnaticTheory.id,
         completionStatus: 'completed',
         score: 95,
         timeSpent: 900, // 15 minutes

@@ -10,6 +10,12 @@ export default function LessonListScreen({ navigation }: any) {
   const [query, setQuery] = useState('');
   const [musicSystem, setMusicSystem] = useState('');
   const [difficulty, setDifficulty] = useState('');
+  const descriptionFallback: Record<string, string> = {
+    'western-theory-intro': 'Staff notation, note names (C–B), accidentals, and key signatures.',
+    'western-scales': 'Practice major and minor scales with interactive playback and piano visualization.',
+    'carnatic-theory-intro': 'Learn the seven basic swaras and build your pitch foundation (sruti).',
+    'carnatic-ragas': 'Explore ragas interactively with arohana/avarohana, piano visualization, and tanpura.',
+  };
 
   const load = async () => {
     setLoading(true);
@@ -46,23 +52,21 @@ export default function LessonListScreen({ navigation }: any) {
         keyExtractor={(i) => i.id}
         renderItem={({ item }) => {
           const displayTitle = item.title.replace(/major\s+scales/gi, 'Scales');
+          const description = (item.content && item.content.trim()) || descriptionFallback[item.id] || '';
           return (
             <TouchableOpacity style={[styles.card, { backgroundColor: colors.card, borderColor: colors.border }]} onPress={() => navigation.navigate('LessonDetail', { id: item.id })}>
               <Text style={[styles.cardTitle, { color: colors.text }]}>{displayTitle}</Text>
+              {!!description && (
+                <Text style={[styles.cardDesc, { color: colors.muted }]} numberOfLines={2}>
+                  {description}
+                </Text>
+              )}
               <Text style={[styles.cardMeta, { color: colors.muted }]}>{item.musicSystem} • {item.difficulty}</Text>
             </TouchableOpacity>
           );
         }}
         ListEmptyComponent={<Text style={{ color: colors.muted, textAlign: 'center' }}>No lessons</Text>}
-        ListHeaderComponent={
-          <TouchableOpacity
-            onPress={() => navigation.navigate('CarnaticRagas')}
-            style={[styles.card, { backgroundColor: colors.card, borderColor: colors.border }]}
-          >
-            <Text style={[styles.cardTitle, { color: colors.text }]}>Carnatic Ragas</Text>
-            <Text style={[styles.cardMeta, { color: colors.muted }]}>Explore ragas with tanpura and piano visualization</Text>
-          </TouchableOpacity>
-        }
+        ListHeaderComponent={undefined as any}
       />
     </View>
   );
@@ -77,6 +81,7 @@ const styles = StyleSheet.create({
   primaryText: { color: '#0b1220', fontWeight: '800', fontSize: 16 },
   card: { borderWidth: 1, borderRadius: 10, padding: 12, marginVertical: 6 },
   cardTitle: { fontWeight: '800', fontSize: 16 },
+  cardDesc: { marginTop: 6, fontSize: 13, lineHeight: 18 },
   cardMeta: { marginTop: 4 },
 });
 
