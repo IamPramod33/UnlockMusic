@@ -58,6 +58,8 @@ async function main() {
   const allowedLessonIds = [
     'carnatic-theory-intro',
     'western-theory-intro',
+    'western-theory-intermediate',
+    'western-theory-advanced',
     'western-scales',
     'carnatic-ragas',
   ];
@@ -75,16 +77,48 @@ async function main() {
   // Create Western music lessons
   const westernTheory = await prisma.lesson.upsert({
     where: { id: 'western-theory-intro' },
-    update: {},
+    update: { title: 'Western Music Theory — Beginner' },
     create: {
       id: 'western-theory-intro',
-      title: 'Introduction to Western Music Theory',
+      title: 'Western Music Theory — Beginner',
       content: 'Learn staff notation, note names (C, D, E, F, G, A, B), accidentals, and the concept of key signatures. This lesson builds a foundation for scales and chords.',
       difficulty: 'beginner',
       musicSystem: 'Western',
       category: 'Theory',
       duration: 15, // minutes
       prerequisites: null,
+    },
+  });
+
+  const westernTheoryIntermediate = await prisma.lesson.upsert({
+    where: { id: 'western-theory-intermediate' },
+    update: {},
+    create: {
+      id: 'western-theory-intermediate',
+      title: 'Western Music Theory — Intermediate',
+      content:
+        'Intervals (quality & inversion), minor scales (natural/harmonic/melodic), modal overview, triads & seventh chords with inversions, functional harmony (T–PD–D), cadences, and intro to voice leading.',
+      difficulty: 'intermediate',
+      musicSystem: 'Western',
+      category: 'Theory',
+      duration: 25,
+      prerequisites: 'western-theory-intro',
+    },
+  });
+
+  const westernTheoryAdvanced = await prisma.lesson.upsert({
+    where: { id: 'western-theory-advanced' },
+    update: {},
+    create: {
+      id: 'western-theory-advanced',
+      title: 'Western Music Theory — Advanced',
+      content:
+        'Secondary dominants/leading-tone chords, borrowed chords (modal interchange), extended chords, pivot-chord modulation, basic counterpoint concepts, odd/compound meters, arranging & simple improvisation.',
+      difficulty: 'advanced',
+      musicSystem: 'Western',
+      category: 'Theory',
+      duration: 30,
+      prerequisites: 'western-theory-intermediate',
     },
   });
 
@@ -135,7 +169,12 @@ async function main() {
   });
 
   console.log('✅ Lessons created:', {
-    western: [westernTheory.title, westernScales.title],
+    western: [
+      westernTheory.title,
+      westernTheoryIntermediate.title,
+      westernTheoryAdvanced.title,
+      westernScales.title,
+    ],
     carnatic: [carnaticTheory.title, carnaticRagas.title],
   });
 
@@ -170,6 +209,41 @@ async function main() {
         difficulty: 'beginner',
         instructions: 'Practice the C major scale with proper fingering',
         hints: 'Use the correct finger pattern: 1-2-3, 1-2-3-4-5 for the right hand',
+      },
+    }),
+
+    // Intermediate theory quick drill
+    prisma.exercise.upsert({
+      where: { id: 'western-exercise-3' },
+      update: {},
+      create: {
+        id: 'western-exercise-3',
+        lessonId: westernTheoryIntermediate.id,
+        type: 'interval_identification',
+        audioFile: null,
+        notation: 'Randomized interval prompts (M3, m6, P4, etc.)',
+        difficulty: 'intermediate',
+        instructions:
+          'Identify the interval quality and size between two shown notes. Aim for accuracy over speed.',
+        hints: 'Count letter names first (size), then adjust for accidentals (quality).',
+      },
+    }),
+
+    // Advanced harmony quick drill
+    prisma.exercise.upsert({
+      where: { id: 'western-exercise-4' },
+      update: {},
+      create: {
+        id: 'western-exercise-4',
+        lessonId: westernTheoryAdvanced.id,
+        type: 'harmony_analysis',
+        audioFile: null,
+        notation:
+          'Analyze: I – vi – ii – V; add one secondary dominant and label Roman numerals.',
+        difficulty: 'advanced',
+        instructions:
+          'Choose a key, label functions (T–PD–D), insert a secondary dominant (e.g., V/V) and update Roman numerals.',
+        hints: 'Target the next chord: V of ii or V of V are common introductions.',
       },
     }),
 

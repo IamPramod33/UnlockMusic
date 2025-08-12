@@ -24,35 +24,63 @@ This document provides a comprehensive overview of all lessons available in the 
 
 ### 🎼 Western Music Lessons
 
-#### 1. Introduction to Musical Notes
-- **ID**: `western-basic-notes`
-- **Title**: Introduction to Musical Notes
+#### 1. Western Music Theory — Beginner
+- **ID**: `western-theory-intro`
+- **Title**: Western Music Theory — Beginner
 - **Difficulty**: Beginner
 - **Category**: Theory
 - **Duration**: 15 minutes
 - **Prerequisites**: None
-- **Content**: Learn the fundamental notes in Western music: C, D, E, F, G, A, B. This lesson covers note names, their positions on the staff, and basic reading skills.
+- **Content**: Staff, clefs, accidentals, rhythm basics, major scale pattern, simple key signatures, keyboard mapping.
 - **Exercises**:
   - **Type**: Note reading
   - **Audio**: `/audio/western/notes-c-major.mp3`
   - **Notation**: `C D E F G A B C`
-  - **Instructions**: Play the C major scale ascending and descending
-  - **Hints**: Start with middle C and follow the pattern: whole, whole, half, whole, whole, whole, half
+  - **Instructions**: Locate staff notes on the keyboard visualization.
+  - **Hints**: Start at middle C (C4).
 
-#### 2. Major Scales
-- **ID**: `western-major-scales`
-- **Title**: Major Scales
+#### 2. Western Music Scales
+- **ID**: `western-scales`
+- **Title**: Western Music Scales
 - **Difficulty**: Beginner
 - **Category**: Scales
 - **Duration**: 20 minutes
-- **Prerequisites**: `western-basic-notes`
-- **Content**: (Content needs to be added)
+- **Prerequisites**: `western-theory-intro`
+- **Content**: Practice major/minor scales with interactive playback and piano visualization. Choose pattern, key, direction.
 - **Exercises**:
   - **Type**: Scale practice
   - **Audio**: `/audio/western/c-major-scale.mp3`
   - **Notation**: `C D E F G A B C B A G F E D C`
-  - **Instructions**: Practice the C major scale with proper fingering
-  - **Hints**: Use the correct finger pattern: 1-2-3, 1-2-3-4-5 for the right hand
+  - **Instructions**: Practice the C major scale with proper fingering.
+  - **Hints**: Right-hand: 1-2-3, 1-2-3-4-5.
+
+#### 3. Western Music Theory — Intermediate
+- **ID**: `western-theory-intermediate`
+- **Title**: Western Music Theory — Intermediate
+- **Difficulty**: Intermediate
+- **Category**: Theory
+- **Duration**: 25 minutes
+- **Prerequisites**: `western-theory-intro`
+- **Content**: Intervals (quality/inversion), minor scales, modal overview, triads and sevenths with inversions, functional harmony (T–PD–D), cadences, intro to voice leading.
+- **Exercises**:
+  - **Type**: Interval identification
+  - **Notation**: Randomized interval prompts (M3, m6, P4, etc.)
+  - **Instructions**: Identify interval size and quality between two notes.
+  - **Hints**: Count letter names (size) first; adjust for accidentals (quality).
+
+#### 4. Western Music Theory — Advanced
+- **ID**: `western-theory-advanced`
+- **Title**: Western Music Theory — Advanced
+- **Difficulty**: Advanced
+- **Category**: Theory
+- **Duration**: 30 minutes
+- **Prerequisites**: `western-theory-intermediate`
+- **Content**: Secondary dominants/leading-tone chords, borrowed chords (modal interchange), extended chords, pivot-chord modulation, basic counterpoint, odd/compound meters, arranging/improvisation.
+- **Exercises**:
+  - **Type**: Harmony analysis
+  - **Notation**: Analyze I–vi–ii–V; insert one secondary dominant with Roman numerals.
+  - **Instructions**: Choose a key, label T–PD–D functions, add V/V or similar and relabel.
+  - **Hints**: Target the destination chord (e.g., V of V or V of ii).
 
 ### 🎵 Carnatic Music Lessons
 
@@ -230,6 +258,7 @@ interface UserProgress {
 ## Related Documentation
 - `docs/carnatic-raga-details.md` - Detailed Carnatic raga implementation
 - `docs/western-lesson-detail.md` - Western lesson detail implementation
+- `docs/western-intro-theory.md` - Western Music Theory — Beginner (topics, flowchart, psychology)
 - `DESIGN_DOCUMENT.md` - Overall project design and architecture
 
 ### Planned Lesson Tracks
