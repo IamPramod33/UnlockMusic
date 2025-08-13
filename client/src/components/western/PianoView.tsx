@@ -158,9 +158,14 @@ export default function PianoView({ highlightNotes = [], activeNotes = [], notat
 
   function eventsFor(note: string) {
     if (!enableTouch) return {} as any;
+    const pressOnce = () => {
+      handlePressIn(note);
+      setTimeout(() => handlePressOut(note), 120);
+    };
     return {
-      onPressIn: () => handlePressIn(note),
-      onPressOut: () => handlePressOut(note),
+      onPress: pressOnce,
+      onPressIn: undefined,
+      onPressOut: undefined,
     } as any;
   }
 
@@ -177,15 +182,7 @@ export default function PianoView({ highlightNotes = [], activeNotes = [], notat
             fill={colorFor(k.note, false)}
             stroke={strokeFor(k.note).color}
             strokeWidth={strokeFor(k.note).width}
-             {...(Platform.OS === 'web'
-               ? ({
-                   onClick: () => { handlePressIn(k.note); setTimeout(() => handlePressOut(k.note), 120); },
-                   onMouseDown: () => handlePressIn(k.note),
-                   onMouseUp: () => handlePressOut(k.note),
-                   onTouchStart: () => handlePressIn(k.note),
-                   onTouchEnd: () => handlePressOut(k.note),
-                 } as any)
-               : eventsFor(k.note))}
+            {...eventsFor(k.note)}
           />
         ))}
         {/* Labels for white keys */}
@@ -218,15 +215,7 @@ export default function PianoView({ highlightNotes = [], activeNotes = [], notat
             rx={2}
             stroke={strokeFor(k.note).color}
             strokeWidth={strokeFor(k.note).width}
-             {...(Platform.OS === 'web'
-               ? ({
-                   onClick: () => { handlePressIn(k.note); setTimeout(() => handlePressOut(k.note), 120); },
-                   onMouseDown: () => handlePressIn(k.note),
-                   onMouseUp: () => handlePressOut(k.note),
-                   onTouchStart: () => handlePressIn(k.note),
-                   onTouchEnd: () => handlePressOut(k.note),
-                 } as any)
-               : eventsFor(k.note))}
+            {...eventsFor(k.note)}
           />
         ))}
       </Svg>

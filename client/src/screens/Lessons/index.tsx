@@ -48,7 +48,12 @@ export default function LessonListScreen({ navigation }: any) {
         </TouchableOpacity>
       </View>
       <FlatList
-        data={items}
+        data={[...items].sort((a, b) => {
+          const aTop = a.id === 'western-theory-intro' ? -1 : a.id === 'carnatic-ragas' ? 0 : 1;
+          const bTop = b.id === 'western-theory-intro' ? -1 : b.id === 'carnatic-ragas' ? 0 : 1;
+          if (aTop !== bTop) return aTop - bTop;
+          return a.title.localeCompare(b.title);
+        })}
         keyExtractor={(i) => i.id}
         renderItem={({ item }) => {
           const displayTitle = item.title.replace(/major\s+scales/gi, 'Scales');
