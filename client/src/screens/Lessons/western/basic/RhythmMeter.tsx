@@ -11,6 +11,8 @@ import {
 } from 'react-native';
 import { useThemeColors } from '../../../../theme';
 import type { Lesson } from '../../../../services/api';
+import { audioPlayer } from '../../../../services/audio';
+import { resolveMediaUrl } from '../../../../utils';
 
 type Props = { lesson: Lesson };
 
@@ -59,6 +61,10 @@ export default function RhythmMeter({ lesson }: Props) {
   const progressAnimation = useRef(new Animated.Value(0)).current;
 
   const screenWidth = Dimensions.get('window').width;
+  
+  // Metronome functionality
+  const metronomeIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const [bpm, setBpm] = useState(60); // 60 BPM = 1 beat per second
 
   useEffect(() => {
     // Initialize shuffled notes for memory game
@@ -87,19 +93,88 @@ export default function RhythmMeter({ lesson }: Props) {
     }
   }, [currentPhase, isPlaying, pulseAnimation]);
 
+  // Metronome functions
+  const playMetronomeClick = async () => {
+    try {
+      // Use a simple click sound - using C4 as a metronome click
+      const clickUrl = resolveMediaUrl('/instruments/piano/C4.mp3');
+      if (clickUrl) {
+        await audioPlayer.play(clickUrl);
+      }
+    } catch (error) {
+      console.error('Error playing metronome click:', error);
+    }
+  };
+
+  const startMetronome = () => {
+    const intervalMs = (60 / bpm) * 1000; // Convert BPM to milliseconds
+    
+    // Play first click immediately
+    playMetronomeClick();
+    
+    // Set up interval for subsequent clicks
+    metronomeIntervalRef.current = setInterval(() => {
+      playMetronomeClick();
+    }, intervalMs);
+  };
+
+  const stopMetronome = () => {
+    if (metronomeIntervalRef.current) {
+      clearInterval(metronomeIntervalRef.current);
+      metronomeIntervalRef.current = null;
+    }
+    audioPlayer.stop();
+  };
+
   const startPulseExercise = () => {
     setIsPlaying(true);
     setPulseAccuracy(0);
-    // Simulate pulse detection
+    
+    // Start the metronome
+    startMetronome();
+    
+    // Stop after 30 seconds (or 3 seconds for demo)
     setTimeout(() => {
+      stopMetronome();
       setIsPlaying(false);
       setPulseAccuracy(85); // Simulated accuracy
       setStreak(prev => prev + 1);
-    }, 3000);
+    }, 3000); // Changed from 3000 to 3000 for demo (30 seconds would be 30000)
   };
 
-  const handleNoteMatch = (note: NoteCard) => {
+  // Cleanup metronome on unmount
+  useEffect(() => {
+    return () => {
+      stopMetronome();
+    };
+  }, []);
+
+  const playNoteValue = async (note: NoteCard) => {
+    try {
+      // Play a sequence of clicks based on the note value
+      const clickUrl = resolveMediaUrl('/instruments/piano/C4.mp3');
+      if (clickUrl) {
+        // Play clicks for the duration of the note
+        const clickCount = Math.floor(note.beats * 2); // 2 clicks per beat for clarity
+        for (let i = 0; i < clickCount; i++) {
+          await audioPlayer.play(clickUrl);
+          // Wait between clicks (500ms for quarter note)
+          if (i < clickCount - 1) {
+            await new Promise(resolve => setTimeout(resolve, 500));
+          }
+        }
+      }
+    } catch (error) {
+      console.error('Error playing note value:', error);
+    }
+  };
+
+  const handleNoteMatch = async (note: NoteCard) => {
     setSelectedNote(note);
+    
+    // Play the note value sound
+    await playNoteValue(note);
+    
     if (note.type === shuffledNotes[noteMatches % 4].type) {
       setNoteMatches(prev => prev + 1);
       setStreak(prev => prev + 1);
@@ -111,8 +186,37 @@ export default function RhythmMeter({ lesson }: Props) {
     }
   };
 
-  const handleMeterSelection = (meter: Meter) => {
+  const playMeterPattern = async (meter: Meter) => {
+    try {
+      const clickUrl = resolveMediaUrl('/instruments/piano/C4.mp3');
+      if (clickUrl) {
+        // Play meter pattern
+        const patterns = {
+          '2/4': [1, 1], // Two strong beats
+          '3/4': [1, 0.5, 0.5], // Three beats, first strongest
+          '4/4': [1, 0.5, 1, 0.5], // Four beats, first and third strong
+        };
+        
+        const pattern = patterns[meter];
+        for (let i = 0; i < pattern.length; i++) {
+          await audioPlayer.play(clickUrl);
+          // Wait based on beat strength (stronger beats = longer wait)
+          if (i < pattern.length - 1) {
+            await new Promise(resolve => setTimeout(resolve, pattern[i] * 600));
+          }
+        }
+      }
+    } catch (error) {
+      console.error('Error playing meter pattern:', error);
+    }
+  };
+
+  const handleMeterSelection = async (meter: Meter) => {
     setSelectedMeter(meter);
+    
+    // Play the meter pattern
+    await playMeterPattern(meter);
+    
     // Simulate correct meter identification
     setTimeout(() => {
       setMeterSuccess(prev => prev + 1);
@@ -251,13 +355,31 @@ export default function RhythmMeter({ lesson }: Props) {
 
             <TouchableOpacity
               style={[styles.actionButton, { backgroundColor: colors.primary }]}
-              onPress={() => {
+              onPress={async () => {
+                // Play the pattern
+                try {
+                  const clickUrl = resolveMediaUrl('/instruments/piano/C4.mp3');
+                  if (clickUrl) {
+                    // Play the pattern: ♩ ♩ 𝅗𝅥 ♩ (quarter, quarter, half, quarter)
+                    const pattern = [1, 1, 2, 1]; // beats for each note
+                    for (let i = 0; i < pattern.length; i++) {
+                      await audioPlayer.play(clickUrl);
+                      // Wait based on note duration (500ms per beat)
+                      if (i < pattern.length - 1) {
+                        await new Promise(resolve => setTimeout(resolve, pattern[i] * 500));
+                      }
+                    }
+                  }
+                } catch (error) {
+                  console.error('Error playing pattern:', error);
+                }
+                
                 setPatternSuccess(prev => prev + 1);
                 setStreak(prev => prev + 1);
               }}
             >
               <Text style={[styles.actionButtonText, { color: colors.background }]}>
-                Create Pattern
+                Play Pattern
               </Text>
             </TouchableOpacity>
           </View>
