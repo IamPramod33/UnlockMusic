@@ -15,13 +15,44 @@ export default function LoginScreen({ navigation }: Props) {
   const handleLogin = async () => {
     setLoading(true);
     try {
+      console.log('Attempting login with:', { email, password });
+      console.log('API_URL:', apiService.API_URL || 'not set');
+      
+      // Test direct API call first
+      try {
+        const testResponse = await fetch('http://192.168.29.207:4000/health');
+        console.log('Health check response:', await testResponse.text());
+      } catch (healthError) {
+        console.error('Health check failed:', healthError);
+      }
+      
+      // Test direct login call
+      try {
+        const directLoginResponse = await fetch('http://192.168.29.207:4000/api/auth/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ email, password }),
+        });
+        const directLoginData = await directLoginResponse.text();
+        console.log('Direct login response:', directLoginData);
+      } catch (directError) {
+        console.error('Direct login failed:', directError);
+      }
+      
       const res = await apiService.login({ email, password });
+      console.log('Login response:', res);
       const me = await apiService.getMe();
+      console.log('GetMe response:', me);
       await useAuthStore.getState().setToken(res.token);
       useAuthStore.getState().setUser(me?.data?.user || null);
       Alert.alert('Signed in', `Welcome, ${me?.data?.user?.name || me?.data?.user?.email || 'user'}`);
     } catch (e) {
-      Alert.alert('Login failed', 'Check credentials and server');
+      console.error('Login error:', e);
+      console.error('Error details:', e.response?.data || e.message);
+      console.error('Error stack:', e.stack);
+      Alert.alert('Login failed', `Error: ${e.response?.data?.message || e.message || 'Check credentials and server'}`);
     } finally {
       setLoading(false);
     }

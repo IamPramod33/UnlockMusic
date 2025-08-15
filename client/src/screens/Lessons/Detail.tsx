@@ -62,7 +62,7 @@ export default function LessonDetailScreen({ route }: any) {
       },
       'western-basic-ear-training-starter': {
         title: 'Ear Training (Starter)',
-        content: 'Do‑re‑mi, recognize steps up/down; tonic stability.',
+        content: 'Note recognition, melodic direction, and interval identification.',
       },
     };
     if (map[id]) {

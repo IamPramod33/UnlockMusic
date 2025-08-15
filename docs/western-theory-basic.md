@@ -45,15 +45,55 @@ Extracted from `western-intro-theory.md` → Syllabus by Level → Basic Topics 
 
 ### 2. Ear Training (Starter)
 - **Lesson ID**: `western-basic-ear-training-starter`
-- **Objective**: Sing/play do‑re‑mi; feel tonic; identify up/down motion.
-- **App Components**: `PianoView` (labels on), `audioPlayer`
-- **Flow (3–7 min)**:
-  - Do‑re‑mi playback; learner echoes; then press highlighted keys.
-  - Task: Hear two notes; answer “up or down?” and “by step or skip?”.
-  - Hide labels for 2 quick challenges.
+- **Objective**: Develop pitch recognition using Western note names (C-D-E-F-G-A-B); identify melodic direction and intervals by ear.
+- **App Components**: `PianoView` (labels on/off), `audioPlayer`, pitch visualization, melodic direction arrows
+- **Flow (8–12 min)**:
+  
+  **Phase 1: Note Recognition (3 min)**
+  - Warm-up: Play C, D, E individually; learner identifies by letter name
+  - Visual feedback: Piano key highlights + note name appears
+  - Progressive difficulty: Start with C-D-E, add F-G, then A-B
+  - Success metric: 8/10 correct identifications
+  
+  **Phase 2: Melodic Direction (3 min)**
+  - Two-note sequences: C→D (up), D→C (down), E→F (up), etc.
+  - Visual cues: Arrows showing direction, piano keys highlight in sequence
+  - Learner answers: "Up" or "Down" buttons
+  - Include same-note sequences (C→C) to test attention
+  - Success metric: 7/10 correct direction identifications
+  
+  **Phase 3: Step vs Skip Recognition (4 min)**
+  - Three-note sequences: C-D-E (steps), C-E-G (skips), D-F-A (skips)
+  - Visual pattern: Show piano keys with step/skip indicators
+  - Learner identifies: "Steps" (adjacent notes) vs "Skips" (jumping notes)
+  - Include mixed patterns: C-D-F (step then skip)
+  - Success metric: 6/8 correct step/skip identifications
+  
+  **Phase 4: Echo Practice (2 min)**
+  - Short melodic phrases: C-D-E, D-E-F, E-F-G
+  - Learner echoes by tapping piano keys in sequence
+  - Visual feedback: Correct sequence highlights green, errors show red
+  - Success metric: Complete 2 phrases without errors
+
+- **UX Features**:
+  - **Progressive Difficulty**: Start simple, gradually increase complexity
+  - **Visual Reinforcement**: Piano highlights + note names + direction arrows
+  - **Audio-Visual Sync**: Perfect timing between sound and visual feedback
+  - **Immediate Feedback**: Green/red indicators for correct/incorrect answers
+  - **Confidence Building**: Start with easy wins, celebrate small successes
+  - **Adaptive Pacing**: Allow learners to repeat sections if needed
+  - **Engagement Elements**: 
+    - Streak counter for consecutive correct answers
+    - "Great ear!" / "Almost there!" encouraging messages
+    - Visual progress bar through the lesson
+    - Optional "hint" button for struggling learners
+
 - **Assessment**:
-  - 5/7 correct “up/down + step/skip” responses
-  - One clean do‑re‑mi echo
+  - Phase 1: 8/10 correct note identifications
+  - Phase 2: 7/10 correct direction identifications  
+  - Phase 3: 6/8 correct step/skip identifications
+  - Phase 4: Complete 2 echo phrases without errors
+  - Overall: 80% accuracy across all phases to advance
 
 ### 3. Notation & Staff
 - **Lesson ID**: `western-basic-notation-staff`

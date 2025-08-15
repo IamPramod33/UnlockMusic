@@ -9,7 +9,7 @@ const appConfig: ExpoConfig = {
   orientation: 'portrait',
   platforms: ['ios', 'android', 'web'],
   extra: {
-    apiUrl: process.env.API_URL || 'http://localhost:4000',
+    apiUrl: process.env.API_URL || 'http://Pramods-Pro-14.local:4000',
     env: process.env.NODE_ENV || 'development',
   },
   updates: {
@@ -26,9 +26,11 @@ const appConfig: ExpoConfig = {
     infoPlist: {
       NSAppTransportSecurity: {
         NSAllowsArbitraryLoads: true,
-        NSExceptionDomains: {
+              NSExceptionDomains: {
           localhost: { NSExceptionAllowsInsecureHTTPLoads: true, NSIncludesSubdomains: true },
           '127.0.0.1': { NSExceptionAllowsInsecureHTTPLoads: true, NSIncludesSubdomains: true },
+          '192.168.29.207': { NSExceptionAllowsInsecureHTTPLoads: true, NSIncludesSubdomains: true },
+          'Pramods-Pro-14.local': { NSExceptionAllowsInsecureHTTPLoads: true, NSIncludesSubdomains: true },
         },
       },
     },

@@ -21,7 +21,7 @@ Design an intuitive, low-friction experience that helps beginners understand cor
 | Rhythm & Meter | RhythmPad | Tap/clap along to metronome; visualize durations | Animate note values filling a bar; dotted/tie demos | "Hold this note for a dotted half in 3/4." |
 | Intervals (Intro) | IntervalTrainer | Select note A → preview up/down half/whole steps | Hear and see semitone vs whole tone | "Move from C to a whole step above." |
 | Scales & Key Signatures | ScaleStepper + KeySignatureWheel | Choose key → step through W–W–H… sequence | Animate tonic-to-tonic path; show key signature accidentals | "Build G major from G4. Step through and play." |
-| Ear Training (Starter) | Call-and-Response Mini | App plays 2–3 notes; user taps back on piano | Lightweight, immediate correctness feedback | "Repeat: do–re–mi." |
+| Ear Training (Starter) | Call-and-Response Mini | App plays 2–3 notes; user taps back on piano | Lightweight, immediate correctness feedback | "Repeat: C-D-E." |
 
 ## Screen Structure (Collapsible)
 1) Header

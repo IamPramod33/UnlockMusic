@@ -3,7 +3,9 @@ import Constants from 'expo-constants';
 import * as SecureStore from 'expo-secure-store';
 
 // Get API URL from environment configuration
-export const API_URL = Constants.expoConfig?.extra?.apiUrl || 'http://localhost:4000';
+export const API_URL = 'http://Pramods-Pro-14.local:4000';
+console.log('API_URL configured as:', API_URL);
+console.log('Constants.expoConfig?.extra:', Constants.expoConfig?.extra);
 
 export function resolveMediaUrl(pathOrUrl?: string): string | undefined {
   if (!pathOrUrl) return undefined;

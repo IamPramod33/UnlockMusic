@@ -644,10 +644,11 @@ app.get('/api/stats', async (req, res) => {
   }
 });
 
-const port = process.env.PORT || 4000;
-app.listen(port, () => {
-  console.log(`🎵 Unlock Music Learning API listening on http://localhost:${port}`);
-  console.log(`📊 Health check: http://localhost:${port}/health`);
-  console.log(`🧪 Database test: http://localhost:${port}/api/test`);
-  console.log(`📈 Statistics: http://localhost:${port}/api/stats`);
+const port = parseInt(process.env.PORT || '4000', 10);
+const host = process.env.HOST || '0.0.0.0';
+app.listen(port, host, () => {
+  console.log(`🎵 Unlock Music Learning API listening on http://${host}:${port}`);
+  console.log(`📊 Health check: http://${host}:${port}/health`);
+  console.log(`🧪 Database test: http://${host}:${port}/api/test`);
+  console.log(`📈 Statistics: http://${host}:${port}/api/stats`);
 });

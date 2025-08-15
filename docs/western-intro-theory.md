@@ -33,7 +33,7 @@ By the end of this lesson track, learners will be able to:
   - Major scale pattern (W-W-H-W-W-W-H)
   - Circle of fifths (conceptual), reading simple key signatures
 - Ear Training (Starter)
-  - Sing/play do-re-mi; recognize steps up/down, tonic stability
+  - Note recognition by letter names; identify melodic direction and intervals
 
 ### Intermediate Topics (Application)
 - Minor Scales & Modes (Overview)

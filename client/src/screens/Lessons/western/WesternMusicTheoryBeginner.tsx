@@ -10,7 +10,7 @@ type Props = { lesson: Lesson };
 
 const BASIC_LESSONS = [
   { id: 'western-basic-keyboard-mapping', title: '1. Keyboard Orientation (Pitch Basics)', subtitle: 'Middle C, octaves, C–B on the keyboard' },
-  { id: 'western-basic-ear-training-starter', title: '2. Ear Training (Starter)', subtitle: 'Do‑re‑mi, up/down by step' },
+  { id: 'western-basic-ear-training-starter', title: '2. Ear Training (Starter)', subtitle: 'Note recognition, melodic direction, intervals' },
   { id: 'western-basic-notation-staff', title: '3. Notation & Staff', subtitle: 'Treble/Bass clefs, lines/spaces, ledger lines' },
   { id: 'western-basic-rhythm-meter', title: '4. Rhythm & Pulse (Basics)', subtitle: 'Note values, steady pulse, simple meters' },
   { id: 'western-basic-intervals-intro', title: '5. Intervals (Intro)', subtitle: 'Half/whole steps, 2nds/3rds…' },
