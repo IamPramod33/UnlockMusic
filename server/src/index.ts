@@ -23,9 +23,11 @@ const publicDir = path.join(__dirname, '..', 'public');
 const audioDir = path.join(publicDir, 'audio');
 const tanpuraDir = path.join(publicDir, 'tanpura');
 const instrumentsDir = path.join(publicDir, 'instruments');
+const noteSvgDir = path.join(publicDir, 'note-svg');
 app.use('/audio', express.static(audioDir, { maxAge: '7d', immutable: true }));
 app.use('/tanpura', express.static(tanpuraDir, { maxAge: '7d', immutable: true }));
 app.use('/instruments', express.static(instrumentsDir, { maxAge: '7d', immutable: true }));
+app.use('/note-svg', express.static(noteSvgDir, { maxAge: '7d', immutable: true }));
 
 // Simple JWT helpers
 const JWT_SECRET = process.env.JWT_SECRET || 'dev_secret_change_me';

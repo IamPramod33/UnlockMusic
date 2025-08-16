@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+  <!-- Half Note (Minim) -->
+  <!-- Note head (hollow oval) -->
+  <ellipse cx="12" cy="12" rx="6" ry="4" fill="none" stroke="currentColor" stroke-width="2"/>
+  <!-- Stem -->
+  <line x1="18" y1="8" x2="18" y2="20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+  <!-- Flag -->
+  <path d="M18 8 Q22 6 22 10 Q22 14 18 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+</svg>
